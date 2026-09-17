@@ -1,0 +1,15 @@
+.reference-table .ant-table {
+  background: var(--color-bg-surface);
+  border-radius: 12px;
+}
+
+.reference-table .ant-table-thead > tr > th {
+  background: #fafbfa;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.reference-table .ant-table-tbody > tr > td {
+  color: var(--color-text-primary);
+}

@@ -1,0 +1,26 @@
+.reference-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reference-section__toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.reference-section__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 260px;
+}
+
+.reference-section__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,21 @@
+.report-preview .ant-table {
+  background: var(--color-bg-surface);
+  border-radius: 12px;
+}
+
+.report-preview .ant-table-thead > tr > th {
+  background: #fafbfa;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.report-preview__address {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.report-preview__address:hover {
+  text-decoration: underline;
+}

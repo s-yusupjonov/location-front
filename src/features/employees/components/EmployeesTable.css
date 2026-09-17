@@ -1,0 +1,16 @@
+.employees-table .ant-table {
+  background: var(--color-bg-surface);
+  border-radius: 12px;
+}
+
+.employees-table .ant-table-thead > tr > th {
+  background: #fafbfa;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.employees-table .ant-table-tbody > tr > td {
+  color: var(--color-text-primary);
+}

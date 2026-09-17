@@ -1,0 +1,19 @@
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.error-state__message {
+  color: #d97706;
+  font-size: 14px;
+  margin: 0;
+}
+
+.error-state__retry {
+  border-radius: 8px;
+}

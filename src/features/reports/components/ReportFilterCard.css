@@ -1,0 +1,43 @@
+.report-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04);
+  padding: 20px;
+}
+
+.report-filter__mode {
+  align-self: flex-start;
+}
+
+.report-filter__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.report-filter__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 180px;
+  flex: 1 1 180px;
+}
+
+.report-filter__field--wide {
+  flex: 2 1 320px;
+}
+
+.report-filter__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.report-filter__download {
+  flex-shrink: 0;
+}
