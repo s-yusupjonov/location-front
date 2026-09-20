@@ -92,6 +92,7 @@ export function YandexMap({
       setLoadError(false);
     });
 
+    
     map.on("error", () => {
       setLoadError(true);
     });
