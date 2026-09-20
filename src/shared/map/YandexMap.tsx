@@ -109,7 +109,7 @@ export function YandexMap({
         }
         return current;
       });
-    }, 1000);
+    }, 5000);
 
     mapRef.current = map;
 

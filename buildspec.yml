@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm ci
+  build:
+    commands:
+      - npm run build
+  post_build:
+    commands:
+      - aws s3 sync dist/ s3://employee-location-frontend1-152128591829/ --delete
+      - aws cloudfront create-invalidation --distribution-id E15MIN9VA5ECN2 --paths "/*"
