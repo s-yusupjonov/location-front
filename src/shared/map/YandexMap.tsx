@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import dayjs from "dayjs";
 import { Spin } from "antd";
 import {
   Map,
@@ -139,7 +140,24 @@ const DEFAULT_VIEW_PADDING = 24;
 
 const ROUTE_COLOR = "#309C44";
 const STOP_COLOR = "#D97706";
-const LIVE_COLOR = "#309C44";
+
+function createCurrentLocationElement() {
+  const element = document.createElement("div");
+  element.className = "current-location-marker";
+
+  const pulse = document.createElement("span");
+  pulse.className = "current-location-marker__pulse";
+
+  const dot = document.createElement("span");
+  dot.className = "current-location-marker__dot";
+
+  const label = document.createElement("span");
+  label.className = "current-location-marker__label";
+
+  element.append(pulse, dot, label);
+
+  return { element, label };
+}
 
 interface YandexMapProps {
   regionCenter?: [number, number] | null;
@@ -165,7 +183,8 @@ export function YandexMap({
   const arrowLayerId = "employee-route-arrows-layer";
 
   const stopMarkersRef = useRef<Marker[]>([]);
-  const liveMarkerRef = useRef<Marker | null>(null);
+  const currentMarkerRef = useRef<Marker | null>(null);
+  const currentLabelRef = useRef<HTMLSpanElement | null>(null);
   const lastLiveCenterRef = useRef<[number, number] | null>(null);
 
   const [isReady, setIsReady] = useState(false);
@@ -433,47 +452,58 @@ export function YandexMap({
   ]);
 
   /*
-   * Live employee marker
+   * Current location marker: the live position when we have one, otherwise
+   * the last point of the route (with the time it was recorded).
    */
   useEffect(() => {
     const map = mapRef.current;
 
     if (!isReady || !map) return;
 
-    if (!liveMarker) {
-      liveMarkerRef.current?.remove();
-      liveMarkerRef.current = null;
+    const lastPoint =
+      route && route.length > 0 ? route[route.length - 1] : undefined;
+
+    let position: LngLat | null = null;
+    let labelText = "";
+
+    if (liveMarker) {
+      position = [liveMarker[1], liveMarker[0]];
+      labelText = strings.map.now;
+    } else if (lastPoint) {
+      position = [lastPoint.longitude, lastPoint.latitude];
+      labelText = `${strings.map.lastLocation} · ${dayjs(lastPoint.timestamp).format("HH:mm")}`;
+    }
+
+    if (!position) {
+      currentMarkerRef.current?.remove();
+      currentMarkerRef.current = null;
+      currentLabelRef.current = null;
       lastLiveCenterRef.current = null;
       return;
     }
 
-    const [lat, lng] = liveMarker;
+    if (!currentMarkerRef.current) {
+      const { element, label } = createCurrentLocationElement();
 
-    if (!liveMarkerRef.current) {
-      const element = document.createElement("div");
-
-      element.style.width = "16px";
-      element.style.height = "16px";
-      element.style.borderRadius = "50%";
-      element.style.backgroundColor = LIVE_COLOR;
-      element.style.border = "3px solid white";
-      element.style.boxShadow =
-        "0 0 0 5px rgba(48, 156, 68, 0.25)";
-
-      liveMarkerRef.current = new Marker({
-        element,
-      })
-        .setLngLat([lng, lat])
+      currentLabelRef.current = label;
+      currentMarkerRef.current = new Marker({ element })
+        .setLngLat(position)
         .addTo(map);
+    } else {
+      currentMarkerRef.current.setLngLat(position);
+    }
 
-      lastLiveCenterRef.current = [lat, lng];
-      map.flyTo({ center: [lng, lat], duration: 800 });
+    if (currentLabelRef.current) {
+      currentLabelRef.current.textContent = labelText;
+    }
 
+    if (!liveMarker) {
+      lastLiveCenterRef.current = null;
       return;
     }
 
-    liveMarkerRef.current.setLngLat([lng, lat]);
-
+    // Follow the employee while live updates arrive.
+    const [lat, lng] = liveMarker;
     const lastCenter = lastLiveCenterRef.current;
     const hasMovedEnough =
       !lastCenter ||
@@ -486,6 +516,7 @@ export function YandexMap({
     }
   }, [
     isReady,
+    route,
     liveMarker,
   ]);
 
