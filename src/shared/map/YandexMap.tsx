@@ -21,8 +21,121 @@ import "./YandexMap.css";
  */
 setWorkerUrl(maplibreWorkerUrl);
 
-const DEFAULT_CENTER: [number, number] = [69.240562, 41.311081];
-const DEFAULT_ZOOM = 6;
+const ARROW_IMAGE_ID = "route-arrow";
+const ARROW_OUTLINE_COLOR = "#1F6B2D";
+// Distance between direction arrows along the route, in meters.
+const ARROW_SPACING_M = 60;
+// Segments shorter than this are GPS jitter while standing still: no arrows there.
+const ARROW_MIN_SEGMENT_M = 15;
+
+type LngLat = [number, number];
+
+function toRad(deg: number): number {
+  return (deg * Math.PI) / 180;
+}
+
+function distanceMeters(a: LngLat, b: LngLat): number {
+  const earthRadius = 6371000;
+  const dLat = toRad(b[1] - a[1]);
+  const dLng = toRad(b[0] - a[0]);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a[1])) * Math.cos(toRad(b[1])) * Math.sin(dLng / 2) ** 2;
+  return 2 * earthRadius * Math.asin(Math.sqrt(h));
+}
+
+// Compass bearing from a to b in degrees (0 = north, 90 = east).
+function bearingDegrees(a: LngLat, b: LngLat): number {
+  const dLng = toRad(b[0] - a[0]);
+  const lat1 = toRad(a[1]);
+  const lat2 = toRad(b[1]);
+  const y = Math.sin(dLng) * Math.cos(lat2);
+  const x =
+    Math.cos(lat1) * Math.sin(lat2) -
+    Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+  return (((Math.atan2(y, x) * 180) / Math.PI) + 360) % 360;
+}
+
+/*
+ * Points placed on the route every ARROW_SPACING_M meters, each carrying the
+ * direction of travel at that spot.
+ */
+function buildArrowFeatures(coordinates: LngLat[]) {
+  const features: Array<{
+    type: "Feature";
+    properties: { bearing: number };
+    geometry: { type: "Point"; coordinates: LngLat };
+  }> = [];
+
+  let nextArrowAt = ARROW_SPACING_M / 2;
+
+  for (let i = 1; i < coordinates.length; i += 1) {
+    const from = coordinates[i - 1];
+    const to = coordinates[i];
+
+    if (!from || !to) continue;
+
+    const length = distanceMeters(from, to);
+
+    if (length < ARROW_MIN_SEGMENT_M) continue;
+
+    const bearing = bearingDegrees(from, to);
+    let position = nextArrowAt;
+
+    while (position <= length) {
+      const t = position / length;
+      features.push({
+        type: "Feature",
+        properties: { bearing },
+        geometry: {
+          type: "Point",
+          coordinates: [
+            from[0] + (to[0] - from[0]) * t,
+            from[1] + (to[1] - from[1]) * t,
+          ],
+        },
+      });
+      position += ARROW_SPACING_M;
+    }
+
+    nextArrowAt = position - length;
+  }
+
+  return features;
+}
+
+// Small white arrowhead pointing up (north); MapLibre rotates it along the route.
+function createArrowImage(): ImageData | null {
+  const size = 32;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+
+  const context = canvas.getContext("2d");
+  if (!context) return null;
+
+  context.beginPath();
+  context.moveTo(16, 4);
+  context.lineTo(27, 26);
+  context.lineTo(16, 20);
+  context.lineTo(5, 26);
+  context.closePath();
+  context.fillStyle = "#FFFFFF";
+  context.fill();
+  context.lineWidth = 2;
+  context.lineJoin = "round";
+  context.strokeStyle = ARROW_OUTLINE_COLOR;
+  context.stroke();
+
+  return context.getImageData(0, 0, size, size);
+}
+
+// Whole of Uzbekistan: [[west, south], [east, north]] in [lng, lat].
+const UZBEKISTAN_BOUNDS: [[number, number], [number, number]] = [
+  [55.9, 37.1],
+  [73.2, 45.6],
+];
+const DEFAULT_VIEW_PADDING = 24;
 
 const ROUTE_COLOR = "#309C44";
 const STOP_COLOR = "#D97706";
@@ -48,6 +161,8 @@ export function YandexMap({
 
   const routeSourceId = "employee-route";
   const routeLayerId = "employee-route-line";
+  const arrowSourceId = "employee-route-arrows";
+  const arrowLayerId = "employee-route-arrows-layer";
 
   const stopMarkersRef = useRef<Marker[]>([]);
   const liveMarkerRef = useRef<Marker | null>(null);
@@ -88,8 +203,8 @@ export function YandexMap({
         ],
       },
 
-      center: [DEFAULT_CENTER[1], DEFAULT_CENTER[0]],
-      zoom: DEFAULT_ZOOM,
+      bounds: UZBEKISTAN_BOUNDS,
+      fitBoundsOptions: { padding: DEFAULT_VIEW_PADDING },
     });
 
     map.addControl(
@@ -148,10 +263,7 @@ export function YandexMap({
         zoom: 10,
       });
     } else {
-      map.flyTo({
-        center: [DEFAULT_CENTER[1], DEFAULT_CENTER[0]],
-        zoom: DEFAULT_ZOOM,
-      });
+      map.fitBounds(UZBEKISTAN_BOUNDS, { padding: DEFAULT_VIEW_PADDING });
     }
   }, [
     isReady,
@@ -168,6 +280,14 @@ export function YandexMap({
 
     if (!isReady || !map) return;
 
+    if (map.getLayer(arrowLayerId)) {
+      map.removeLayer(arrowLayerId);
+    }
+
+    if (map.getSource(arrowSourceId)) {
+      map.removeSource(arrowSourceId);
+    }
+
     if (map.getLayer(routeLayerId)) {
       map.removeLayer(routeLayerId);
     }
@@ -178,7 +298,7 @@ export function YandexMap({
 
     if (!route || route.length === 0) return;
 
-    const coordinates: [number, number][] = Array.isArray(route)
+    const coordinates: LngLat[] = Array.isArray(route)
       ? route.map((point) => [
           point.longitude,
           point.latitude,
@@ -213,6 +333,42 @@ export function YandexMap({
         "line-opacity": 0.85,
       },
     });
+
+    /*
+     * Direction arrows along the route
+     */
+    if (!map.hasImage(ARROW_IMAGE_ID)) {
+      const arrowImage = createArrowImage();
+
+      if (arrowImage) {
+        map.addImage(ARROW_IMAGE_ID, arrowImage, { pixelRatio: 2 });
+      }
+    }
+
+    if (map.hasImage(ARROW_IMAGE_ID)) {
+      map.addSource(arrowSourceId, {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: buildArrowFeatures(coordinates),
+        },
+      });
+
+      map.addLayer({
+        id: arrowLayerId,
+        type: "symbol",
+        source: arrowSourceId,
+
+        layout: {
+          "icon-image": ARROW_IMAGE_ID,
+          "icon-size": 0.85,
+          "icon-rotate": ["get", "bearing"],
+          "icon-rotation-alignment": "map",
+          "icon-pitch-alignment": "map",
+          "icon-padding": 6,
+        },
+      });
+    }
 
     const bounds = new LngLatBounds();
 
