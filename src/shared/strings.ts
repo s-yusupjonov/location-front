@@ -200,6 +200,8 @@ export const strings = {
   },
   map: {
     loadError: "Xarita yuklanmadi",
+    lastLocation: "Oxirgi joylashuv",
+    now: "Hozir",
   },
   common: {
     minutes: "daqiqa",
