@@ -5,11 +5,21 @@ import {
   Marker,
   NavigationControl,
   LngLatBounds,
+  setWorkerUrl,
 } from "maplibre-gl";
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import type { RoutePointDto, StopDto } from "@/shared/types/api";
 import { strings } from "@/shared/strings";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./YandexMap.css";
+
+/*
+ * MapLibre runs GeoJSON layers (the employee route line) in a Web Worker.
+ * By default it looks for the worker file next to the bundled JS, which Vite
+ * does not emit, so the worker never starts and the route line is never drawn.
+ * `?worker&url` makes Vite bundle the worker and gives us its real URL.
+ */
+setWorkerUrl(maplibreWorkerUrl);
 
 const DEFAULT_CENTER: [number, number] = [69.240562, 41.311081];
 const DEFAULT_ZOOM = 6;
