@@ -247,6 +247,11 @@
   z-index: 10;
 }
 
+/* Logo above the title: only shown on small screens, where the hero (and its logo) is hidden */
+.login-card-logo {
+  display: none;
+}
+
 .login-card-title {
   font-size: 26px;
   font-weight: 700;
@@ -504,36 +509,28 @@ input::-ms-clear {
 }
 
 @media (max-width: 860px) {
-  .login-page {
-    flex-direction: column;
-  }
-
+  /* Small screens: drop the green hero and keep only the white login form */
   .login-hero-side {
-    width: 100%;
-    min-height: auto;
-    padding: 36px 28px;
-  }
-
-  .hero-content {
-    margin: 28px 0;
-  }
-
-  .hero-features {
-    padding-top: 16px;
+    display: none;
   }
 
   .login-form-side {
     width: 100%;
-    min-height: auto;
-    padding: 28px 20px 24px 20px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 24px 20px 20px 20px;
   }
 
-  .login-card-wrap {
-    padding: 16px 0;
+  .login-card-logo {
+    display: block;
+    height: 32px;
+    width: auto;
+    margin: 0 auto 24px auto;
   }
+}
 
+@media (max-width: 480px) {
   .login-card {
-    max-width: 100%;
-    padding: 32px 22px;
+    padding: 28px 20px;
   }
 }
