@@ -200,7 +200,7 @@ export const strings = {
   },
   map: {
     loadError: "Xarita yuklanmadi",
-    lastLocation: "Oxirgi joylashuv",
+    lastLocation: "So`ngi joylashuv",
     now: "Hozir",
   },
   common: {
