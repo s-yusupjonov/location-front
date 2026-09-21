@@ -208,6 +208,7 @@ export function LoginPage() {
       <div className="login-form-side">
         <div className="login-card-wrap">
           <div className="login-card">
+            <img src={agrobankLogo} alt={strings.app.title} className="login-card-logo" />
             <h2 className="login-card-title">{t.welcomeTitle}</h2>
             <p className="login-card-subtitle">{t.welcomeSubtitle}</p>
 
