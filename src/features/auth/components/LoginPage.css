@@ -1,138 +1,539 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Login Page Root Layout ── */
 .login-page {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
+  width: 100%;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  background-color: #FFFFFF;
+  color: #111827;
 }
 
-.login-page__hero {
-  flex: 1;
-  background: #309c44;
+/* ─────────────────────────────────────────────────────────
+   LEFT PANEL: AGROBANK HERO & BRAND SHOWCASE
+   ───────────────────────────────────────────────────────── */
+.login-hero-side {
+  width: 50%;
+  min-height: 100vh;
+  background-color: #00A859;
+  background: linear-gradient(145deg, #00A859 0%, #009E54 50%, #008F4B 100%);
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 56px;
+  box-sizing: border-box;
 }
 
-.login-page__hero-pattern {
+/* Vector Graphic Illustrations Background */
+.login-hero-bg {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
-.login-page__hero-pattern svg {
-  width: 100%;
-  max-width: 420px;
-  height: auto;
+/* Floating Tilted Rounded Diamonds */
+.hero-diamond {
+  position: absolute;
+  border-radius: 28px;
+  transform: rotate(45deg);
+  pointer-events: none;
 }
 
-.login-page__hero-content {
-  position: relative;
+.hero-diamond--1 {
+  width: 260px;
+  height: 260px;
+  top: 14%;
+  right: -40px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+}
+
+.hero-diamond--2 {
+  width: 170px;
+  height: 170px;
+  bottom: 22%;
+  left: -30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.hero-diamond--3 {
+  width: 110px;
+  height: 110px;
+  top: 38%;
+  left: 20%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Subtle Dot Grid Matrix */
+.hero-dot-matrix {
+  position: absolute;
+  top: 22%;
+  right: 18%;
+  width: 120px;
+  height: 180px;
+  pointer-events: none;
+  opacity: 0.8;
   z-index: 1;
-  max-width: 380px;
-  padding: 0 48px;
-  color: #ffffff;
 }
 
-.login-page__logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 40px;
-}
-
-.login-page__logo-mark {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 17px;
-}
-
-.login-page__logo-text {
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 0.2px;
-}
-
-.login-page__title {
-  font-size: 26px;
-  font-weight: 600;
-  line-height: 1.3;
-  margin: 0 0 12px;
-}
-
-.login-page__tagline {
-  font-size: 14px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0;
-}
-
-.login-page__panel {
-  flex: 1;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-}
-
-.login-page__card {
+/* Glowing Financial / Analytics Line Chart with Vertex Nodes */
+.hero-chart-line {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
   width: 100%;
-  max-width: 360px;
-  padding: 40px 8px;
+  height: 280px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Translucent Bar Chart on Right Edge */
+.hero-bars {
+  position: absolute;
+  right: 48px;
+  bottom: 84px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  height: 240px;
+  z-index: 1;
+}
+
+.hero-bar {
+  width: 22px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px 6px 0 0;
+  backdrop-filter: blur(2px);
+}
+
+/* Top Left Brand Logo (official logo sits on a white tile so it stays legible on the green hero) */
+.hero-top {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-brand {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  user-select: none;
+}
+
+.hero-brand-logo {
+  display: block;
+  height: 30px;
+  width: auto;
+}
+
+/* Center Content: Headline & Subtitle */
+.hero-content {
+  position: relative;
+  z-index: 3;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 30px 0;
+}
+
+.hero-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.16;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.6px;
+}
+
+.hero-subtitle {
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Bottom Features Row */
+.hero-features {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 24px;
+}
+
+.hero-feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  flex: 1;
+  color: #FFFFFF;
+}
+
+.hero-feature-icon {
+  color: #FFFFFF;
+}
+
+.hero-headset-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+}
+
+.hero-feature-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  white-space: nowrap;
+}
+
+.hero-feature-divider {
+  width: 1px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* ─────────────────────────────────────────────────────────
+   RIGHT PANEL: LOGIN CARD & FOOTER
+   ───────────────────────────────────────────────────────── */
+.login-form-side {
+  width: 50%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 48px 20px 48px;
+  box-sizing: border-box;
+  position: relative;
+  background-color: #FFFFFF;
+}
+
+/* ─────────────────────────────────────────────────────────
+   CENTER LOGIN CARD
+   ───────────────────────────────────────────────────────── */
+.login-card-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 24px 0;
+  position: relative;
+  z-index: 5;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 16px;
+  padding: 40px;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  position: relative;
+  z-index: 10;
+}
+
+.login-card-title {
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.3px;
+  color: #111827;
+}
+
+.login-card-subtitle {
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 28px 0;
+  color: #6B7280;
+}
+
+/* Error Alert */
+.login-alert-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #DC2626;
+}
+
+/* Form Styles */
+.login-form-inner {
   display: flex;
   flex-direction: column;
 }
 
-.login-page__card-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 28px;
-  color: var(--color-text-primary);
-}
-
-.login-page__field {
+.input-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
   margin-bottom: 18px;
 }
 
-.login-page__label {
+.input-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.input-field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-left {
+  position: absolute;
+  left: 14px;
+  pointer-events: none;
+  color: #9CA3AF;
+}
+
+.login-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px 0 42px;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  color: #111827;
+}
+
+.login-input::placeholder {
+  color: #9CA3AF;
+}
+
+.login-input:focus {
+  background: #FFFFFF;
+  border-color: #00A859;
+  box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.15);
+}
+
+/* global.css adds an outline on input:focus-visible; the border + ring above already mark focus */
+.login-input:focus-visible {
+  outline: none;
+}
+
+.login-input--pw {
+  padding-right: 44px;
+}
+
+/* Prevent Browser Native Autofill Background */
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus,
+.login-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #F9FAFB inset !important;
+  -webkit-text-fill-color: #111827 !important;
+  caret-color: #111827 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Hide native Edge / Chrome password reveal */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+.pw-toggle-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #9CA3AF;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.18s ease;
+}
+
+.pw-toggle-btn:hover {
+  color: #4B5563;
+}
+
+/* Remember Me Row */
+.remember-row {
+  margin: 4px 0 20px 0;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  cursor: pointer;
+  user-select: none;
+  color: #4B5563;
+}
+
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  accent-color: #00A859;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Submit Action Button (Agrobank Brand Green CTA #00A859) */
+.login-submit-btn {
+  width: 100%;
+  height: 48px;
+  background-color: #00A859;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.18s ease;
+  box-shadow: 0 2px 6px rgba(0, 168, 89, 0.28);
+  font-family: inherit;
+}
+
+.login-submit-btn:hover:not(:disabled) {
+  background-color: #00964F;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 168, 89, 0.35);
+}
+
+.login-submit-btn:active:not(:disabled) {
+  background-color: #008746;
+  transform: translateY(0);
+}
+
+.login-submit-btn:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.login-spinner {
+  width: 17px;
+  height: 17px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spinLoader 0.7s linear infinite;
+}
+
+@keyframes spinLoader {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Security Note */
+.login-security-badge {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--color-text-secondary);
+  color: #00A859;
+  user-select: none;
 }
 
-.login-page__error {
-  color: var(--color-warning);
-  font-size: 13px;
-  margin: -6px 0 14px;
-}
-
-.login-page__submit {
-  margin-top: 6px;
-  font-weight: 600;
-}
-
-.login-page__trust {
+/* ─────────────────────────────────────────────────────────
+   FOOTER
+   ───────────────────────────────────────────────────────── */
+.login-page-footer {
   text-align: center;
   font-size: 12px;
-  color: var(--color-text-secondary);
-  margin: 18px 0 0;
+  color: #9CA3AF;
+  padding: 14px 0 6px 0;
+  user-select: none;
+}
+
+/* ─────────────────────────────────────────────────────────
+   RESPONSIVE DESIGN BREAKPOINTS
+   ───────────────────────────────────────────────────────── */
+@media (max-width: 1060px) {
+  .login-hero-side {
+    padding: 36px 36px;
+  }
+
+  .hero-title {
+    font-size: 34px;
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+  }
+
+  .login-form-side {
+    padding: 24px 28px;
+  }
+
+  .login-card {
+    padding: 32px 28px;
+  }
 }
 
 @media (max-width: 860px) {
-  .login-page__hero {
-    display: none;
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-hero-side {
+    width: 100%;
+    min-height: auto;
+    padding: 36px 28px;
+  }
+
+  .hero-content {
+    margin: 28px 0;
+  }
+
+  .hero-features {
+    padding-top: 16px;
+  }
+
+  .login-form-side {
+    width: 100%;
+    min-height: auto;
+    padding: 28px 20px 24px 20px;
+  }
+
+  .login-card-wrap {
+    padding: 16px 0;
+  }
+
+  .login-card {
+    max-width: 100%;
+    padding: 32px 22px;
   }
 }

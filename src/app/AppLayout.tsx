@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { Button } from "antd";
+import agrobankLogo from "@/assets/logos/agrobank-logo.png";
 import { strings } from "@/shared/strings";
 import { useAuth } from "@/features/auth/context/AuthContext";
 import "./AppLayout.css";
@@ -18,8 +19,7 @@ export function AppLayout() {
     <div className="app-layout">
       <header className="app-layout__nav">
         <div className="app-layout__brand">
-          <span className="app-layout__brand-mark">A</span>
-          <span className="app-layout__brand-name">{strings.app.title}</span>
+          <img src={agrobankLogo} alt={strings.app.title} className="app-layout__logo" />
         </div>
         <nav className="app-layout__tabs">
           {navItems.map((item) => (

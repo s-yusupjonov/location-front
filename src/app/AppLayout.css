@@ -21,23 +21,10 @@
   gap: 10px;
 }
 
-.app-layout__brand-mark {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--color-primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.app-layout__brand-name {
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--color-text-primary);
+.app-layout__logo {
+  display: block;
+  height: 26px;
+  width: auto;
 }
 
 .app-layout__tabs {
